@@ -348,7 +348,7 @@ await main().then(() => {
           //request  = JSON.stringify(request)
           try {
             $.ajax({
-            type: "POST",
+            type: "GET",
             url: "https://e034-2a02-810d-1500-1590-eccc-9d96-a503-6f0f.eu.ngrok.io/do_predict",
             data: JSON.stringify(request),
             contentType: "application/json",
