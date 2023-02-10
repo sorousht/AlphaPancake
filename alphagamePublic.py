@@ -55,7 +55,7 @@ def predict(input_data):
 
     # Return the predictions as a response
     return action
-@app.route("/do_predict", methods=["GET,POST"])
+@app.route("/do_predict", methods=["POST"])
 #@cross_origin()
 def do_predict():
     # Get the input array from the request body
@@ -76,8 +76,8 @@ def do_predict():
     print(result)
     response = jsonify({"output_string": str(result)})
     response.headers.add("Access-Control-Allow-Origin", "*")
-    response.headers.add("Access-Control-Allow-Methods", "GET,POST")
-    response.headers.add("Access-Control-Allow-Headers", "Authorization")
+    response.headers.add("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS")
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
     response.headers.add("Access-Control-Allow-Credentials", "true")
     
     
