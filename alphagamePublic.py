@@ -10,7 +10,7 @@ from MCTS import MCTS
 from utils import *
 import Arena
 app = Flask(__name__)
-CORS(app,origins="https://aminahantab.github.io")
+CORS(app,origins="*")
 g = Game(5)
 # nnet players
 custom_model = NNet(g)
@@ -75,10 +75,10 @@ def do_predict():
     # Return the result as JSON
     print(result)
     response = jsonify({"output_string": str(result)})
-    response.headers.add("Access-Control-Allow-Origin", "https://aminahantab.github.io")
-    response.headers.add("Access-Control-Allow-Methods", "POST")
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    #response.headers.add("Access-Control-Allow-Methods")
     #response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-    response.headers.add("Access-Control-Allow-Credentials", "true")
+    #response.headers.add("Access-Control-Allow-Credentials", "true")
     
     
     return response
