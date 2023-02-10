@@ -1,0 +1,420 @@
+
+<html>
+
+
+  <button id="submit-button">Flip the Pancakes!</button>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.5/lib/draggable.bundle.js"></script>
+
+
+  </head>
+    <canvas id="canvas" width="600" height="400"></canvas>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <canvas id="myCanvas" width="500" height="500"></canvas>
+    
+    <script>
+    //const canvas = document.getElementById("myCanvas");
+   
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+const objects = [
+  { x: 300, y: 220, height: 20, color: "blue" },
+  { x: 290, y: 242, height: 40, color: "red" },
+  { x: 280, y: 262, height: 60, color: "green" },
+  { x: 270, y: 282, height: 80, color: "yellow" },
+  { x: 260, y: 302, height: 100, color: "purple" }
+];
+//draw();
+let selectedObject;
+let isDragging = false;
+let isNotFlipping = false;
+if (!isNotFlipping){
+canvas.addEventListener("mousedown", e => {
+  const mouseX = e.clientX - canvas.offsetLeft;
+  const mouseY = e.clientY - canvas.offsetTop;
+
+  objects.forEach((obj, i) => {
+    if (mouseX >= obj.x && mouseX <= obj.x + obj.height && mouseY >= obj.y && mouseY <= obj.y + obj.height) {
+      selectedObject = i;
+      isDragging = true;
+    }
+  });
+});
+
+canvas.addEventListener("mouseup", e  => {
+  if (isDragging){
+const mouseX = e.clientX -canvas.offsetLeft;
+const mouseY = e.clientY - canvas.offsetTop;
+    objects.forEach((obj, i) => {
+      if (
+        i !== selectedObject &&
+        //mouseX >= obj.x &&
+       // mouseX <= obj.x + obj.height &&
+        mouseY >= obj.y &&
+        mouseY <= obj.y + obj.height
+      ) {
+        const tempHeight = objects[selectedObject].height;
+        const tempX = objects[selectedObject].x;
+        const color =  objects[selectedObject].color
+        objects[selectedObject].height = obj.height;
+        objects[selectedObject].color = obj.color
+        obj.color = color
+        objects[selectedObject].x = obj.x;
+        obj.height = tempHeight;
+        obj.x = tempX;
+      }
+    });
+    isDragging = false;
+    if(!isNotFlipping){
+    draw();
+    console.log("still printing")
+    }
+  }
+  
+  else {
+  selectedObject = null;
+  isDragging = false;
+  }
+  //draw();
+});
+
+canvas.addEventListener("mousemove", e => {
+  if (isDragging) {
+    const mouseX = e.clientX - canvas.offsetLeft;
+    const mouseY = e.clientY - canvas.offsetTop;
+
+    objects.forEach((obj, i) => {
+      if (
+        i !== selectedObject &&
+        mouseX >= obj.x &&
+        mouseX <= obj.x + obj.height &&
+        mouseY >= obj.y &&
+        mouseY <= obj.y + obj.height
+      ) {
+        const tempHeight = objects[selectedObject].height;
+        const tempX = objects[selectedObject].x;
+
+        //objects[selectedObject].height = obj.height;
+        //objects[selectedObject].x = obj.x;
+        //obj.height = tempHeight;
+        //obj.x = tempX;
+      }
+    });
+  if (!isNotFlipping){
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  objects.forEach(obj => {
+    ctx.fillStyle = obj.color;
+    if (obj.x == objects[selectedObject].x)
+    {ctx.fillRect(mouseX, mouseY, obj.height, 20);}
+    else{
+    ctx.fillRect(obj.x, obj.y, obj.height, 20);}
+  });
+}
+
+  }
+});
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  objects.forEach(obj => {
+    ctx.fillStyle = obj.color;
+    ctx.fillRect(obj.x, obj.y, obj.height, 20);
+  });
+}
+if (!isNotFlipping){
+draw();
+}
+}
+ 
+        class PancakeStack {
+          constructor() {
+           this.pancakes = [];
+           this.y = []
+           this.param = []
+          }
+
+        addPancakes(n1, n2, n3, n4, n5) {
+          this.pancakes.push(n1);
+          this.pancakes.push(n2);
+          this.pancakes.push(n3);
+          this.pancakes.push(n4);
+          this.pancakes.push(n5);
+        }
+        flip(k)
+        {
+            let flipPancakes = this.pancakes.slice(0, k ).reverse();
+            let flipObj = this.param.slice(0, k ).reverse();
+            this.pancakes = flipPancakes.concat(this.pancakes.slice(k ));
+            this.param = flipObj.concat(this.param.slice(k ));
+
+        }
+        }
+
+        var stack = new PancakeStack();
+
+        function waitForSubmit() {
+  return new Promise((resolve, reject) => {
+    const submitButton = document.getElementById("submit-button");
+    submitButton.addEventListener("click", function() {
+      resolve();
+    });
+  });
+}
+function animateRotate(stack,rotation,rotationStep,callback,k){
+  function drawStackTest(rotation) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  let flipParam = stack.param//.slice(0, k).reverse();
+  let flipY = stack.y//.slice(0, k).reverse();
+  let off = stack.y[0]
+  console.log(off)
+  let rotatedParam = [];
+  let rotatedY = [];
+  console.log(rotation)
+
+  let angle = Math.PI * rotation / 180;
+  let sum =  off.reduce((total, current) => total + current, 0);
+  //let average = sum / off.length;
+  let average = 220
+ console.log(sum)
+  console.log(average)
+  let offset =stack.y[k][0]-average
+  
+  for (let i = 0; i < k+1; i++) {
+    let x = flipParam[i][0];
+    let y = flipY[i][0];
+    let newX = ((y-average) * Math.sin(angle));
+    let newY = ((y-average) * Math.cos(angle))//+average;
+    newY= newY+average -30+ ((offset+30)*rotation/180)
+    newX=newX+310-flipParam[i][1]/2
+    console.log("newX",newX)
+    console.log("newY",newY)
+    rotatedParam.push([newX, flipParam[i][1], flipParam[i][2]]);
+    rotatedY.push([newY]);
+  }
+
+  let finalParam = rotatedParam.concat(stack.param.slice(k+1));
+  let finalY = rotatedY.concat(stack.y.slice(k+1));
+console.log(finalParam)
+console.log(finalY)
+  for (let i = 0; i < stack.pancakes.length; i++) {
+    ctx.fillStyle = finalParam[i][2];
+    ctx.fillRect(finalParam[i][0], finalY[i][0], finalParam[i][1], 20);
+  }
+}
+
+
+    function waitFor(ms) {
+          return new Promise(function (resolve){
+            setTimeout(resolve, ms);
+          } )
+          
+         }
+    
+    function animate() {
+            rotation += rotationStep;
+            if (rotation > 180) {
+              rotation = 0;
+              cancelAnimationFrame(id);
+              callback()
+
+                }
+            else{
+            drawStackTest(rotation);
+            id =requestAnimationFrame(animate);
+            }
+            }
+  id = requestAnimationFrame(animate);
+   
+          }
+
+async function main() {
+  await waitForSubmit();
+  stack = new PancakeStack();
+  
+  objects.forEach((obj, i) => {
+    stack.pancakes.push(obj.height/20)
+    stack.param.push([obj.x,obj.height,obj.color])
+    stack.y.push([obj.y])
+
+  
+  });
+  let rotation = 0
+  let rotationStep  = 10
+  //animateRotate(stack,rotation)
+}
+let isRunning = false;
+async function loop(){
+if (isRunning) return;
+isRunning =true
+await main().then(() => {
+  let rotation = 0 
+  
+  isNotFlipping = true
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        //var stack = new PancakeStack(5);
+        //let x = 300;
+        //let y = 200;
+        /*
+        function drawStack() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+            console.log(stack.objects)
+            temp =stack.param.concat(stack.y) ;
+            stack.param.forEach((e,i) => {
+            ctx.fillStyle = e[2]
+            //ctx.fillRect(x - stack.pancakes[1] * 10, y + (1 + 1) * 20, stack.pancakes[1] * 20, 20);
+            ctx.fillRect(e[0], stack.y[i][0], e[1], 20);
+            console.log(e[0],stack.y[i][0], e[1])
+            });
+
+            
+        }
+        */
+        /*function drawStack(rotation,k) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  let flipParam = stack.param//.slice(0, k).reverse();
+  let flipY = stack.y//.slice(0, k).reverse();
+  let off = stack.y
+  let rotatedParam = [];
+  let rotatedY = [];
+  function add(accumulator, a) {
+  return accumulator + a;
+}
+  let angle = Math.PI * rotation / 180;
+  let sum =  off.reduce((total, current) => total + current, 0);
+  let average = sum / off.length;
+  for (let i = 0; i < k; i++) {
+    let x = flipParam[i][0];
+    let y = flipY[i][0];
+    let newX = ((y-average) * Math.sin(angle));
+    let newY = ((y-average) * Math.cos(angle))
+    newY= newY+average -30+ (70*rotation/180)
+    newX=newX+310-flipParam[i][1]/2
+    rotatedParam.push([newX, flipParam[i][1], flipParam[i][2]]);
+    rotatedY.push([newY]);
+  }
+
+  let finalParam = rotatedParam.concat(stack.param.slice(k));
+  let finalY = rotatedY.concat(stack.y.slice(k));
+
+  for (let i = 0; i < stack.pancakes.length; i++) {
+    ctx.fillStyle = finalParam[i][2];
+    ctx.fillRect(finalParam[i][0], finalY[i][0], finalParam[i][1], 20);
+  }
+}*/
+
+         
+        
+        let iteration = 0;
+        
+        (async function(){
+        while (iteration < 10) {
+          let rotation = 0;
+          let rotationStep = 10;
+          function waitFor(ms) {
+          return new Promise(function (resolve){
+            setTimeout(resolve, ms);
+          } )
+          
+         }
+         /*
+          function animate() {
+            rotation += rotationStep;
+            if (rotation >= 180) {
+              rotation = 0;
+                }
+            drawStack(rotation,k);
+            requestAnimationFrame(animate);
+            }*/
+
+
+          iteration++;
+          var k;
+          list1 = stack.pancakes
+          //drawStack();
+          //concatenatedList = list1.map((val, index) => [val, order[index]]);
+          //console.log(list1)
+          //drawStack()
+          //await waitFor(500)
+          var request = {input_string:list1.join("")}
+          
+          console.log(request)
+          //request  = JSON.stringify(request)
+          try {
+            $.ajax({
+            type: "POST",
+            url: "http://localhost:5000/do_predict",
+            data: JSON.stringify(request),
+            contentType: "application/json",
+            success: function(data) {
+            // Use the result in a JavaScript function
+            
+            k = parseInt(data.output_string)
+            /*
+            await new Promise(resolve => {
+            animateRotate(resolve);
+              });*/
+            animateRotate(stack,0,2,function(){stack.flip(k+1)},k);
+            waitFor(1000)
+            console.log("flip at",data.output_string);
+            //stack.flip(k+1)
+            //var canvas = document.getElementById("myCanvas");
+            //var ctx = canvas.getContext("2d");
+            /*
+            var angle = 0;
+            var animationDuration = 1000; // duration of animation in milliseconds
+            var startTime = new Date();
+            
+            function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "red";
+            ctx.translate(150, 150);
+            ctx.rotate(angle);
+            ctx.fillRect(-50, -50, 100, 100);
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+            var elapsedTime = new Date() - startTime;
+            if (elapsedTime < animationDuration) {
+              angle = (Math.PI / (animationDuration / elapsedTime)) - Math.PI;
+      requestAnimationFrame(animate);
+    }
+  }
+
+  requestAnimationFrame(animate);*/
+  //requestAnimationFrame(animate);
+
+            //drawStack()
+            //console.log(stack.pancakes)
+            
+         
+            },
+            error: function(xhr, status, error) {
+            console.log("hallo")
+            console.log(error);
+            console.log(xhr);
+            console.log(status);
+          }
+
+          });
+          await waitFor(5000)
+          } catch (error) {
+            console.log('from trz catch', error);
+          }
+
+        }})();
+        console.log("Exceeded iteration number 10");
+        isNotFlipping = false
+      });
+isRunning =false;
+    }
+setInterval(loop,1000);
+
+    </script>
+  </body>
+</html> 
